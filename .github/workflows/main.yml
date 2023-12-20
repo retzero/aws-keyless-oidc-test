@@ -1,0 +1,25 @@
+name: AWS example workflow
+on:
+  push
+
+permissions:
+  id-token: write
+  contents: read
+  
+jobs:
+  S3Test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git clone the repository
+        uses: actions/checkout@v4
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: ${{ secrets.AWS_PUBLIC_RETZERO_ROLE_TO_ASSUME }}
+          aws-region: ap-northeast-2
+
+      - name:  Copy index.html to s3
+        run: |
+          aws sts get-caller-identity
+          aws s3 ls s3://superior-bucket/
